@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+namespace _04.Cubic_Meages
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Regex filter;
+            string input;
+            int lenght;
+            List<int> index = new List<int>();
+            List<string> output = new List<string>();
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (input.Equals("Over!")) break;
+                else
+                {
+                    lenght = int.Parse(Console.ReadLine());
+                    filter = new Regex($@"^[0-9]+[a-zA-Z]{{{lenght}}}[^a-zA-Z]*$");
+                    if (filter.IsMatch(input))
+                    {
+                        string toDecrypt = "";
+                        foreach (char letter in input)
+                        {
+                            if (Regex.IsMatch(letter.ToString(), "[0-9]")) index.Add(Convert.ToInt32(letter.ToString()));
+                            else if (char.IsLetter(letter)) toDecrypt += letter;
+                        }
+                        string decrypted = "";
+                        for (int i = 0; i < index.Count; i++)
+                        {
+                            if (index[i] >= toDecrypt.Length) decrypted += " ";
+                            else decrypted += toDecrypt[index[i]];
+                        }
+                        output.Add(toDecrypt + " == " + decrypted);
+                        index.Clear();
+                    }
+                }
+            }
+            foreach (string item in output)
+            {
+                Console.WriteLine(item);
+            }
+            Console.ReadLine();
+        }
+    }
+}
