@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace _04.Worms_World_Party
+{
+    class Player
+    {
+        public string Name;
+        public long Points;
+
+        public Player (string name, long points)
+        {
+            this.Name = name;
+            this.Points = points;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<string, List<Player>> data = new Dictionary<string, List<Player>>();
+            Regex register = new Regex($@"[\w ]+ -> [\w ]+ -> [0-9]+");
+            List<string> participants = new List<string>();
+            string input = "";
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (input.Equals("quit") || input.Equals("")) break;
+                else
+                {
+                    if (register.IsMatch(input))
+                    {
+                        string[] tokens = input.Split(new string[] { " -> " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        string team = tokens[1];
+                        string wormName = tokens[0];
+                        long pointsWorm = Convert.ToInt64(tokens[2]);
+                        if (!participants.Contains(wormName))
+                        {
+                            participants.Add(wormName);
+                            if (!data.ContainsKey(team)) data.Add(team, new List<Player>());
+                            data[team].Add(new Player(wormName, pointsWorm));
+                        }
+                    }
+                }
+            }
+            int order = 1;
+            
+            foreach (KeyValuePair<string, List<Player>> record in data.OrderByDescending(x => x.Value.Sum(a => a.Points)).ThenByDescending(a => a.Value.Sum(x => x.Points) / a.Value.Count))  
+            {
+                Console.WriteLine($"{order}. Team: {record.Key} - {record.Value.Sum(x => x.Points)}");
+                foreach (Player participant in record.Value.OrderByDescending(x => x.Points))
+                {
+                    Console.WriteLine($"###{participant.Name} : {participant.Points}");
+                }
+                order++;
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
