@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _04.Hornet_Armada
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int number = int.Parse(Console.ReadLine());
+            Dictionary<string, int> LegionActivity = new Dictionary<string, int>();
+            Dictionary<string, Dictionary<string, long>> LegionUnits = new Dictionary<string, Dictionary<string, long>>();
+
+            string input = "";
+            string printFiter = "";
+            for (int i = 0; i < number; i++)
+            {
+                input = Console.ReadLine();
+                string[] tokens = input.Split(new string[] { ":", " = ", " -> " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                int act = Convert.ToInt32(tokens[0]);
+                string name = tokens[1];
+                string type = tokens[2];
+                long count = Convert.ToInt64(tokens[3]);
+
+                if (!LegionActivity.ContainsKey(name)) LegionActivity.Add(name, act);
+                if (LegionActivity[name] < act) LegionActivity[name] = act;
+
+                if (!LegionUnits.ContainsKey(name)) LegionUnits.Add(name, new Dictionary<string, long>());
+                if (!LegionUnits[name].ContainsKey(type)) LegionUnits[name].Add(type, 0);
+                LegionUnits[name][type] += count;
+            }
+
+            printFiter = Console.ReadLine();
+            int activity = 0;
+            string soldierType = "";
+            if (printFiter.Contains('\\'))
+            {
+                activity = Convert.ToInt32(printFiter.Substring(0, printFiter.IndexOf('\\')));
+                soldierType = printFiter.Substring(printFiter.IndexOf('\\') + 1, printFiter.Length - 1 - activity.ToString().Length);
+                LegionUnits = LegionUnits.Where(x => x.Value.ContainsKey(soldierType)).OrderByDescending(x => x.Value[soldierType]).ToDictionary(pair => pair.Key, pair => pair.Value);
+                foreach (var record in LegionUnits)
+                {
+                    if (LegionActivity[record.Key] < activity) Console.WriteLine($"{record.Key} -> {record.Value[soldierType]}");
+                }
+            }
+            else
+            {
+                soldierType = printFiter;
+                LegionActivity = LegionActivity.OrderByDescending(x => x.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                foreach (var item in LegionActivity)
+                {
+                    if (LegionUnits[item.Key].ContainsKey(soldierType)) Console.WriteLine($"{item.Value} : {item.Key}");
+                }
+            }
+            Console.ReadLine();
+        }
+    }
+}
