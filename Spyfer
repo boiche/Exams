@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace _03.Spyfer
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<int> numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            int currentIndex = 0;
+            while (currentIndex < numbers.Count && numbers.Count > 1)
+            {
+                int sum, currentNumber = numbers[currentIndex];
+                if (currentIndex.Equals(0))
+                {
+                    sum = numbers[currentIndex + 1];
+                    if (currentNumber == sum)
+                    {
+                        numbers.RemoveAt(currentIndex + 1);
+                        currentIndex = 0;
+                    }
+                    else currentIndex++;
+                }
+                else if (currentIndex.Equals(numbers.Count - 1))
+                {
+                    sum = numbers[currentIndex - 1];
+                    if (currentNumber == sum)
+                    {
+                        numbers.RemoveAt(currentIndex - 1);
+                        currentIndex = 0;
+                    }
+                    else currentIndex++;
+                }
+                else
+                {
+                    sum = numbers[currentIndex + 1] + numbers[currentIndex - 1];
+                    if (currentNumber == sum)
+                    {
+                        numbers.RemoveAt(currentIndex - 1);
+                        numbers.RemoveAt(currentIndex);
+                        currentIndex = 0;
+                    }
+                    else currentIndex++;
+                }
+            }
+            Console.WriteLine(string.Join(" ", numbers));
+            Console.ReadLine();
+        }
+    }
+}
