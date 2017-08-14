@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace _04.NSA
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<string, Dictionary<string, long>> data = new Dictionary<string, Dictionary<string, long>>();
+            string input = "";
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (input.Equals("quit") || input.Equals("")) break;
+                else
+                {
+                    string[] tokens = input.Split(new string[] { " -> " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    string country = tokens[0];
+                    string spyName = tokens[1];
+                    long daysInService = Convert.ToInt64(tokens[2]);
+
+                    if (!data.ContainsKey(country)) data.Add(country, new Dictionary<string, long>());
+                    if (!data[country].ContainsKey(spyName)) data[country].Add(spyName, daysInService);
+                    else data[country][spyName] = daysInService;
+                }
+            }
+            data = data.OrderByDescending(x => x.Value.Count).ToDictionary(pair => pair.Key, pair => pair.Value);
+            foreach (var item in data) 
+            {
+                Console.WriteLine($"Country: {item.Key}");
+                foreach (KeyValuePair<string, long> spy in item.Value.OrderByDescending(x => x.Value))  
+                {
+                    Console.WriteLine($"**{spy.Key} : {spy.Value}");
+                }
+            }
+            Console.ReadLine();
+        }
+    }
+}
