@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _01.Hornet_Wings
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int flapsTotal = int.Parse(Console.ReadLine());
+            double distancePer1000 = double.Parse(Console.ReadLine());
+            int flapsPerBreak = int.Parse(Console.ReadLine());
+            int secondFlying = flapsTotal / 100 + (flapsTotal / flapsPerBreak) * 5;
+            double distance = (flapsTotal / 1000) * distancePer1000;
+            Console.WriteLine($"{distance:f2} m.");
+            Console.WriteLine($"{secondFlying} s.");
+            Console.ReadLine();
+        }
+    }
+}
