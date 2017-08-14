@@ -1,0 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _01.Splinter_Trip
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            decimal distanceTotal = decimal.Parse(Console.ReadLine());
+            decimal fuelTank = decimal.Parse(Console.ReadLine());
+            decimal heavyWinds = decimal.Parse(Console.ReadLine());
+            decimal totalFuel = heavyWinds * 1.5m * 25m + (distanceTotal - heavyWinds) * 25m;
+            totalFuel = totalFuel + totalFuel * 5 / 100;
+            Console.WriteLine($"Fuel needed: {totalFuel:f2}L");
+            if (fuelTank >= totalFuel) Console.WriteLine($"Enough with {fuelTank-totalFuel:f2}L to spare!");
+            else Console.WriteLine($"We need {totalFuel-fuelTank:f2}L more fuel.");
+            Console.ReadLine();
+        }
+    }
+}
