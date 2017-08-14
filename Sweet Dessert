@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _01.Sweet_Dessert
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            decimal cash = decimal.Parse(Console.ReadLine());
+            int guests = int.Parse(Console.ReadLine());
+            decimal bananaPrice = decimal.Parse(Console.ReadLine());
+            decimal eggPrice = decimal.Parse(Console.ReadLine());
+            decimal berryKgPrice = decimal.Parse(Console.ReadLine());
+            int portions = guests;
+            decimal sets;
+            while (portions % 6 != 0)
+            {
+                portions += 1;
+            }
+
+            sets = portions / 6;
+            decimal totalBanana = sets * 2;
+            decimal totalEgg = sets * 4;
+            decimal totalKgBerry = sets * (decimal)0.2;
+
+            decimal totalMoney = totalBanana * bananaPrice + totalEgg * eggPrice + totalKgBerry * berryKgPrice;
+            if (totalMoney > cash) Console.WriteLine($"Ivancho will have to withdraw money - he will need {totalMoney - cash:f2}lv more.");
+            else Console.WriteLine($"Ivancho has enough money - it would cost {totalMoney:f2}lv.");
+            Console.ReadLine();
+        }
+    }
+}
