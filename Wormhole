@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _03.Wormhola
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<int> holes = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            int currentIndex = 0;
+            int steps = 0;
+            while (true)
+            {
+                if (holes[currentIndex].Equals(0))
+                {
+                    currentIndex++;
+                    steps++;
+                }
+                else
+                {
+                    int delete = currentIndex;
+                    currentIndex = holes[currentIndex];
+                    holes[delete] = 0;
+                }
+                if (currentIndex == holes.Count) break;
+            }
+            Console.WriteLine(steps);
+            Console.ReadLine();
+        }
+    }
+}
