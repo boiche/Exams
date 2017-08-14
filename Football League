@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace _03.Football_League
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<string, ulong> teamGoals = new Dictionary<string, ulong>();
+            Dictionary<string, int> teamPoints = new Dictionary<string, int>();
+            string key = Console.ReadLine();
+
+            string toDecrypt;
+            while (true)
+            {
+                toDecrypt = Console.ReadLine();
+                if (toDecrypt.Equals("final")) break;
+                else
+                {
+                    Regex teamPattern = new Regex($@"{Regex.Escape(key)}[a-zA-Z]+{Regex.Escape(key)}");
+                    
+                    Regex scorePattern = new Regex(@" [0-9]+:[0-9]+");
+                    ulong[] score = scorePattern.Match(toDecrypt).ToString().Split(':').Select(ulong.Parse).ToArray();
+                    string teamA = "";
+                    string teamB = "";
+                    for (int i = teamPattern.Match(toDecrypt).ToString().Replace(key, "").Length - 1; i >= 0; i--)
+                    {
+                        teamA += teamPattern.Match(toDecrypt).ToString().Replace(key, "")[i].ToString().ToUpper();
+                    }
+                    if (!teamGoals.ContainsKey(teamA)) teamGoals.Add(teamA, 0);
+                    if (!teamPoints.ContainsKey(teamA)) teamPoints.Add(teamA, 0);
+                    teamGoals[teamA] += score[0];
+                    toDecrypt = toDecrypt.Replace(teamPattern.Match(toDecrypt).ToString(), "");
+
+
+                    for (int i = teamPattern.Match(toDecrypt).ToString().Replace(key, "").Length - 1; i >= 0; i--)
+                    {
+                        teamB += teamPattern.Match(toDecrypt).ToString().Replace(key, "")[i].ToString().ToUpper();
+                    }
+                    if (!teamGoals.ContainsKey(teamB)) teamGoals.Add(teamB, 0);
+                    if (!teamPoints.ContainsKey(teamB)) teamPoints.Add(teamB, 0);
+                    teamGoals[teamB] += score[1];
+
+                    if (score[0] > score[1]) teamPoints[teamA] += 3;
+                    else if (score[0] < score[1]) teamPoints[teamB] += 3;
+                    else
+                    {
+                        teamPoints[teamA] += 1;
+                        teamPoints[teamB] += 1;
+                    }
+                }
+            }
+            Console.WriteLine("League standings:");
+            int order = 1;
+            foreach (KeyValuePair<string, int> team in teamPoints.OrderByDescending(x => x.Value).ThenBy(x => x.Key))
+            {
+                Console.WriteLine($"{order}. {team.Key} {team.Value}");
+                order++;
+            }
+            Console.WriteLine("Top 3 scored goals:");
+            foreach (KeyValuePair<string, ulong> goals in teamGoals.OrderByDescending(x => x.Value).ThenBy(x => x.Key).Take(3))
+            {
+                Console.WriteLine($" - {goals.Key} -> {goals.Value}");
+            }
+            Console.ReadLine();
+        }
+    }
+}
