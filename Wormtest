@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _01.Wormtest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ulong lenght = ulong.Parse(Console.ReadLine()) * 100; //in cm
+            decimal width = decimal.Parse(Console.ReadLine()); //in cm
+            decimal result = lenght * width;
+            if (width == 0) Console.WriteLine($"{result:f2}");
+            else if (lenght % width == 0) Console.WriteLine($"{result:f2}"); 
+            else Console.WriteLine($"{(lenght * 100 / width):f2}" + "%");
+            Console.ReadLine();
+        }
+    }
+}
