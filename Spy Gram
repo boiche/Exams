@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace _02.Spy_Gram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Regex filter = new Regex($@"^TO: [A-Z]+; MESSAGE: .+;$");
+            Dictionary<string, List<string>> senders = new Dictionary<string, List<string>>();
+            string key = Console.ReadLine();
+            string input = "";
+            while (true)
+            {
+                input = Console.ReadLine();
+                string newMessage = "";
+                if (input.Equals("END") || input.Equals("")) break;
+                else
+                {
+                    string[] tokens = input.Split(':', ';').ToArray();
+                    string sender = tokens[1];
+                    if (filter.IsMatch(input))
+                    {
+                        int indexOfKey = 0;
+                        foreach (char letter in input)
+                        {
+                            int currentKey = Convert.ToInt32(key[indexOfKey].ToString());
+                            newMessage += Convert.ToChar((Convert.ToInt32(letter) + currentKey));
+                            indexOfKey++;
+                            if (indexOfKey.Equals(key.Length)) indexOfKey = 0;
+                        }
+                        if (!senders.ContainsKey(sender)) senders.Add(sender, new List<string>());
+                        senders[sender].Add(newMessage);
+                    }
+                }
+            }
+            foreach (var item in senders.OrderBy(x => x.Key))
+            {
+                foreach (string message in item.Value)
+                {
+                    Console.WriteLine(message);
+                }
+            }
+            Console.ReadLine();
+        }
+    }
+}
