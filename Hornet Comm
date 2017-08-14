@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+namespace _02.Hornet_Comm
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string input;
+            Regex privatePattern = new Regex($@"^[0-9]+ <-> [a-zA-Z0-9]+$");
+            Regex broadcastPattern = new Regex($@"^[^0-9]+ <-> [0-9A-Za-z]+$");
+            List<string> messages = new List<string>();
+            List<string> broadcasts = new List<string>();
+            while(true)
+            {
+                input = Console.ReadLine();
+                if (input.Equals("Hornet is Green") || input.Equals("")) break;
+                else
+                {
+                    if (privatePattern.IsMatch(input))
+                    {
+                        string[] data = input.Split(new string[] { " <-> " }, StringSplitOptions.RemoveEmptyEntries);
+                        string recipientCode = "";
+                        string message = data[1];
+                        for (int i = data[0].Length-1; i >= 0; i--)
+                        {
+                            recipientCode += data[0][i];
+                        }
+                        messages.Add(recipientCode + " -> " + message);
+                    }
+                    else if (broadcastPattern.IsMatch(input)) 
+                    {
+                        string[] data = input.Split(new string[] { " <-> " }, StringSplitOptions.RemoveEmptyEntries);
+                        string message = data[0];
+                        string frequency = data[1];
+                        string newFrequency = "";
+                        for (int i = 0; i < frequency.Length; i++)
+                        {
+                            if (char.IsLetter(frequency[i]))
+                            {
+                                if (char.IsUpper(frequency[i])) newFrequency += char.ToLower(frequency[i]);
+                                else newFrequency += char.ToUpper(frequency[i]);
+                            }
+                            else newFrequency += frequency[i];
+                        }
+                        broadcasts.Add(newFrequency + " -> " + message);
+                    }
+                }
+            }
+            Console.WriteLine("Broadcasts:");
+            if (broadcasts.Count > 0)
+            {
+                foreach (string item in broadcasts)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            else Console.WriteLine("None");
+            Console.WriteLine("Messages:");
+            if (messages.Count > 0)
+            {
+                foreach (string msg in messages)
+                {
+                    Console.WriteLine(msg);
+                }
+            }
+            else Console.WriteLine("None");
+            Console.ReadLine();
+        }
+    }
+}
